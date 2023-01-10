@@ -7,27 +7,29 @@ from collections import Counter
 pd.options.mode.chained_assignment = None  # default='warn'
 
 def IO(df):
-    def IO(df):
-     inputs = []
-     outputs = []
-     for column in df.columns:
-      # if len(df[column].unique()) > 1:
-      if column[:2] == 'in':
-        # print(column)
-       inputs.append(column)
-      if column[:3] == 'out':
-        # print(column)
-       outputs.append(column)
+ inputs = []
+ outputs = []
+ for column in df.columns:
+  # if len(df[column].unique()) > 1:
+  if column[:2] == 'in':
+   # print(column)
+   inputs.append(column)
+  if column[:3] == 'out':
+   # print(column)
+   outputs.append(column)
 
-     return inputs, outputs
+ return inputs, outputs
 
+# inputs, outputs = IO(df)
 
-def ScaleOld(df, inputs, outputs):
-    scaler = MinMaxScaler()
-    df_scaled = df[inputs + outputs]
-    df_scaled[list(df_scaled.columns)] = scaler.fit_transform(df_scaled[list(df_scaled.columns)])
+def Scale(df, inputs, scale_columns = 'filllater'):
+ scaler = MinMaxScaler()
+ data_notscaled = df.drop(inputs, axis=1)
+ df_scaled = scaler.fit_transform(df[inputs].to_numpy())
+ df_scaled = pd.DataFrame(df_scaled, columns= inputs)
+ df_norm = pd.concat((df_scaled, data_notscaled), axis = 1)
 
-    return df_scaled
+ return df_norm
 
 def displaylight(df, run):
  daylight_matrix = np.array(df['out:DFdata2D'][run])#.reshape(16,6)

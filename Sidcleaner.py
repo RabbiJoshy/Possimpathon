@@ -21,7 +21,9 @@ sid2['out:DFdata'] = sid2['out:DFdata'].apply(lambda x: np.array(x[:-1].split(';
 sid2['out:SVdata2D'] = sid2['out:SVdata'].apply(lambda x: x.reshape(5,8))
 sid2['out:DFdata2D'] = sid2['out:DFdata'].apply(lambda x: x.reshape(8,17)) #10m long
 sid2['in:SVdataAVG'] = sid2['out:SVdata'].apply(lambda x: np.mean(x))
-# df['out:DFdataAVG'] = df['out:DFdata'].apply(lambda x: np.mean(x))
+sid2['out:DFdataAVG'] = sid2['out:DFdata'].apply(lambda x: np.mean(x))
+sid2['in:X']= 1
+sid2['in:Y']= 1
 
 #
 # for i in range(i):
@@ -40,15 +42,15 @@ def IO(df):
 
  return inputs, outputs
 inputs, outputs = IO(sid2)
-def Scale(df, scale_columns = 'filllater'):
- scaler = MinMaxScaler()
- data_notscaled = df.drop(inputs, axis=1)
- df_scaled = scaler.fit_transform(df[inputs].to_numpy())
- df_scaled = pd.DataFrame(df_scaled, columns= inputs)
- df_norm = pd.concat((df_scaled, data_notscaled), axis = 1)
+# def Scale(df, scale_columns = 'filllater'):
+#  scaler = MinMaxScaler()
+#  data_notscaled = df.drop(inputs, axis=1)
+#  df_scaled = scaler.fit_transform(df[inputs].to_numpy())
+#  df_scaled = pd.DataFrame(df_scaled, columns= inputs)
+#  df_norm = pd.concat((df_scaled, data_notscaled), axis = 1)
+#
+#  return df_norm
+# scaled_df = Scale(sid2)
 
- return df_norm
-scaled_df = Scale(sid2)
-
-sid3_clean = scaled_df[scaled_df['out:Effectivedepth'] > 0 ]
+sid3_clean = sid2[sid2['out:Effectivedepth'] > 0 ]
 sid3_clean.to_csv('sid3_clean')
